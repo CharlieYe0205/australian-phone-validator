@@ -11,60 +11,54 @@ In the project directory, you can run:
 Runs the app in the development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
 
-### `npm test`
+## Source
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+This phone validator validates some formats listed here: https://en.wikipedia.org/wiki/Telephone_numbers_in_Australia#International_access
 
-### `npm run build`
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Algorithm
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+The algorithm is
+1. Remove all the ' ', '-', '_', '(' and ')' from the input
+2. Check whether it starts with +61 (australian international code) or 0 (australian trunk code). <br/> Followed by an area code which is 2378 for geographic numbers or 45 for mobile. <br/> End with 8 digit numbers.
+3. if there is a match then display valid, otherwise not valid will be displayed.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+this algorithm can detect the following situations as valid input
 
-### `npm run eject`
+<ul>
+    <li>+61415778806
+    <li>0415778806
+    <li>+61212345678
+    <li>02 12345678
+    <li>(+61) 2 12345678
+    <li>(+61) 2 123-45-678
+    <li>(+61) 2 123_45_678
+</ul>
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+the following situations as invalid input
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+<ul>
+    <li>0912345678
+    <li>+60415778806
+    <li>+61912345678
+    <li>0612345678
+    <li>+610414570776666666
+    <li>041577880x
+</ul>
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## Limitations
 
-## Learn More
+1. Warning! this project contains no jest test at all due to limited time for development. Need to cover tests later.
+2. this algorithm does not check the format of brackets. So the input of +6141577(((8806 is considered as valid input.
+3. this algorithm does not check the format of spaces. So the input of + 6 1 41577   8806 is considered as valid input.
+4. this algorithm does not check the format of '-'. So the input of +61---415778806 is considered as valid input.
+5. this algorithm does not check the format of '_'. So the input of +614___15778806 is considered as valid input.
+6. it does not check the two digits after the area code for geographic number. The list can be found in the wikipedia page.
+7. The UI is bad.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## One more thing
 
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+if a validator for production need to be implemented. A trusted third-party library should be used. for example https://github.com/google/libphonenumber
